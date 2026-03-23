@@ -1,0 +1,238 @@
+// assets/js/app.js
+
+// === Simple state ===
+let currentTheme = "light";
+let currentProducts = [...PRODUCTS];
+
+// === Helpers ===
+function formatKes(amount) {
+  return "KES " + amount.toLocaleString();
+}
+
+function createStars(rating) {
+  return "★".repeat(rating) + "☆".repeat(5 - rating);
+}
+
+// === Navbar mobile ===
+const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+const navLinks = document.getElementById("navLinks");
+
+if (mobileMenuToggle && navLinks) {
+  mobileMenuToggle.addEventListener("click", () => {
+    const isOpen = navLinks.style.display === "flex";
+    navLinks.style.display = isOpen ? "none" : "flex";
+  });
+}
+
+// === Dark mode toggle ===
+const darkToggle = document.getElementById("darkModeToggle");
+if (darkToggle) {
+  darkToggle.addEventListener("click", () => {
+    currentTheme = currentTheme === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", currentTheme);
+  });
+}
+
+// === Render product card ===
+function renderProductCard(product) {
+  const card = document.createElement("article");
+  card.className = "product-card";
+  card.dataset.id = product.id;
+
+  card.innerHTML = `
+    <div class="product-card__image-wrapper">
+      <img src="assets/images/${product.image}" alt="${product.name}" />
+      <span class="product-card__tag">${product.tag || "Limited stock"}</span>
+      <button class="product-card__wishlist" type="button">❤</button>
+    </div>
+    <div class="product-card__body">
+      <h3 class="product-card__title">${product.name}</h3>
+      <div class="product-card__meta">
+        <span>${product.size}</span>
+        <span>${product.condition}</span>
+      </div>
+      <div class="product-card__price">${formatKes(product.price)}</div>
+    </div>
+  `;
+
+  card.addEventListener("click", (e) => {
+    // Ignore wishlist button click
+    if (e.target.closest(".product-card__wishlist")) {
+      e.stopPropagation();
+      e.target.classList.toggle("active");
+      return;
+    }
+    openProductModal(product);
+  });
+
+  return card;
+}
+
+// === Render grids ===
+const featuredGrid = document.getElementById("featuredGrid");
+const newArrivalsGrid = document.getElementById("newArrivalsGrid");
+const shopGrid = document.getElementById("shopGrid");
+const testimonialsGrid = document.getElementById("testimonialsGrid");
+
+function renderFeatured() {
+  if (!featuredGrid) return;
+  featuredGrid.innerHTML = "";
+  const featured = PRODUCTS.slice(0, 3);
+  featured.forEach((p) => featuredGrid.appendChild(renderProductCard(p)));
+}
+
+function renderNewArrivals() {
+  if (!newArrivalsGrid) return;
+  newArrivalsGrid.innerHTML = "";
+  const arrivals = PRODUCTS.slice().reverse();
+  arrivals.forEach((p) => newArrivalsGrid.appendChild(renderProductCard(p)));
+}
+
+function renderShopGrid(list) {
+  if (!shopGrid) return;
+  shopGrid.innerHTML = "";
+  list.forEach((p) => shopGrid.appendChild(renderProductCard(p)));
+}
+
+function renderTestimonials() {
+  if (!testimonialsGrid) return;
+  testimonialsGrid.innerHTML = "";
+  TESTIMONIALS.forEach((t) => {
+    const card = document.createElement("article");
+    card.className = "testimonial-card";
+    card.innerHTML = `
+      <div class="testimonial-card__name">${t.name}</div>
+      <div class="testimonial-card__stars">${createStars(t.rating)}</div>
+      <p>${t.text}</p>
+    `;
+    testimonialsGrid.appendChild(card);
+  });
+}
+
+// === Filters & sorting ===
+const filterSize = document.getElementById("filterSize");
+const filterCondition = document.getElementById("filterCondition");
+const sortBy = document.getElementById("sortBy");
+
+function applyFilters() {
+  let filtered = [...PRODUCTS];
+
+  const sizeVal = filterSize.value;
+  const condVal = filterCondition.value;
+
+  if (sizeVal) {
+    filtered = filtered.filter((p) => p.size === sizeVal);
+  }
+  if (condVal) {
+    filtered = filtered.filter((p) => p.condition === condVal);
+  }
+
+  const sortVal = sortBy.value;
+  if (sortVal === "low-high") {
+    filtered.sort((a, b) => a.price - b.price);
+  } else if (sortVal === "high-low") {
+    filtered.sort((a, b) => b.price - a.price);
+  } else {
+    filtered = filtered.reverse();
+  }
+
+  currentProducts = filtered;
+  renderShopGrid(filtered);
+}
+
+if (filterSize && filterCondition && sortBy) {
+  [filterSize, filterCondition, sortBy].forEach((el) => {
+    el.addEventListener("change", applyFilters);
+  });
+}
+
+// === Product modal ===
+const modal = document.getElementById("productModal");
+const modalBackdrop = document.getElementById("productModalBackdrop");
+const modalClose = document.getElementById("productModalClose");
+
+const modalMainImage = document.getElementById("modalMainImage");
+const modalThumbs = document.getElementById("modalThumbs");
+const modalTitle = document.getElementById("modalTitle");
+const modalPrice = document.getElementById("modalPrice");
+const modalSize = document.getElementById("modalSize");
+const modalCondition = document.getElementById("modalCondition");
+const modalDescription = document.getElementById("modalDescription");
+const modalTag = document.getElementById("modalTag");
+const whatsappOrderBtn = document.getElementById("whatsappOrderBtn");
+const buyNowBtn = document.getElementById("buyNowBtn");
+
+function openProductModal(product) {
+  if (!modal) return;
+  modal.classList.add("modal--open");
+  modal.setAttribute("aria-hidden", "false");
+
+  modalTitle.textContent = product.name;
+  modalPrice.textContent = formatKes(product.price);
+  modalSize.textContent = product.size;
+  modalCondition.textContent = product.condition;
+  modalDescription.textContent = product.description;
+  modalTag.textContent = product.tag || "Limited stock";
+
+  if (product.images && product.images.length) {
+    modalMainImage.src = "assets/images/" + product.images[0];
+    modalThumbs.innerHTML = "";
+    product.images.forEach((img, index) => {
+      const thumb = document.createElement("img");
+      thumb.src = "assets/images/" + img;
+      if (index === 0) thumb.classList.add("active");
+      thumb.addEventListener("click", () => {
+        document.querySelectorAll("#modalThumbs img").forEach((t) => t.classList.remove("active"));
+        thumb.classList.add("active");
+        modalMainImage.src = thumb.src;
+      });
+      modalThumbs.appendChild(thumb);
+    });
+  }
+
+  const waNumber = "2547XXXXXXXX"; // replace with your number
+  const msg = encodeURIComponent(
+    `Hi Thrift Kicks Nairobi, I'm interested in: ${product.name} (${product.size}, ${product.condition}) at ${formatKes(
+      product.price
+    )}. Is it still available?`
+  );
+  whatsappOrderBtn.href = `https://wa.me/${waNumber}?text=${msg}`;
+
+  buyNowBtn.addEventListener(
+    "click",
+    () => {
+      localStorage.setItem(
+        "checkoutItem",
+        JSON.stringify({
+          id: product.id,
+          name: product.name,
+          size: product.size,
+          condition: product.condition,
+          price: product.price,
+        })
+      );
+    },
+    { once: true }
+  );
+}
+
+function closeProductModal() {
+  if (!modal) return;
+  modal.classList.remove("modal--open");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+if (modalBackdrop && modalClose) {
+  modalBackdrop.addEventListener("click", closeProductModal);
+  modalClose.addEventListener("click", closeProductModal);
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeProductModal();
+  });
+}
+
+// === Init ===
+renderFeatured();
+renderNewArrivals();
+renderShopGrid(PRODUCTS);
+renderTestimonials();
+applyFilters();

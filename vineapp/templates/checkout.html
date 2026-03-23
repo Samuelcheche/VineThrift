@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Thrift Kicks Collection</title>
+    {% load static %}
+    <link rel="icon" type="image/png" href="{% static 'assets/image.png' %}">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #ff7a1a;
+            --primary-dark: #e86200;
+            --bg-light: #f8f9fa;
+            --card-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            --border-radius: 16px;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .checkout-hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 40px 0;
+        }
+        .mpesa-simulate {
+            background: #198754;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .mpesa-simulate:hover { background: #157347; transform: translateY(-2px); }
+        .order-summary {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 100px;
+        }
+        .form-floating input, .form-floating select { border-radius: 12px; }
+        @media (max-width: 768px) {
+            .order-summary { position: static; margin-top: 24px; }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<!-- Checkout Header -->
+<section class="checkout-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-5 fw-bold mb-2">🛒 Checkout</h1>
+                <p class="lead mb-0">Complete your order and pay easily via M-Pesa STK Push</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{% url 'index' %}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container py-5">
+    <div class="row g-5">
+        <!-- Checkout Form -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg" style="border-radius: var(--border-radius);">
+                <div class="card-body p-5">
+                    <h3 class="fw-bold mb-4"><i class="fas fa-user me-2"></i>Delivery Details</h3>
+                    
+                    <form id="checkoutForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="fullName" placeholder="Full Name" required>
+                                    <label for="fullName">Full Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="emailAddress" placeholder="you@example.com" required>
+                                    <label for="emailAddress">Email Address</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="form-floating">
+                                    <input type="tel" class="form-control" id="phoneNumber" placeholder="2547XXXXXXXX" required>
+                                    <label for="phoneNumber">Phone Number (M-Pesa)</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="location" placeholder="Delivery Location" required>
+                                <label for="location">Delivery Location</label>
+                                <small class="text-muted">All Over The Country</small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-5">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="notes" placeholder="Leave a comment here" style="height: 100px;"></textarea>
+                                <label for="notes">Delivery Instructions (Optional)</label>
+                                <small class="text-muted">Landmarks, preferred delivery time, etc.</small>
+                            </div>
+                        </div>
+
+                        <!-- M-Pesa Payment -->
+                        <div class="bg-light p-4 rounded-3 mb-4">
+                            <h4 class="fw-bold mb-3">
+                                <i class="fas fa-mobile-alt text-success me-2"></i>M-Pesa Payment
+                            </h4>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                When you tap "Pay with M-Pesa", we'll send an STK Push to your phone. 
+                                Enter your M-Pesa PIN to complete payment instantly.
+                            </div>
+                            <button type="submit" class="btn mpesa-simulate btn-lg w-100 py-4 fs-4 fw-bold">
+                                <i class="fas fa-lock me-3"></i>
+                                Pay with M-Pesa (KES <span id="totalAmount">0</span>)
+                            </button>
+                            <div id="paymentStatus" class="mt-3"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-lg px-5">
+                                ← Back to Shop
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                Place Order
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <div class="order-summary p-4">
+                <h4 class="fw-bold mb-4">Order Summary</h4>
+                
+                <div id="orderItem" class="mb-4 p-3 border rounded-3">
+                    <!-- Item loaded from sessionStorage -->
+                </div>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal</span>
+                    <span id="subtotal">KES 0</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 text-success fw-bold">
+                    <span>Delivery </span>
+                    <span>+ KES 300</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between mb-4 h4 fw-bold text-primary">
+                    <span>Total</span>
+                    <span id="total">KES 0</span>
+                </div>
+                
+                <div class="alert alert-success">
+                    <i class="fas fa-shipping-fast me-2"></i>
+                    <strong>Free Delivery</strong> within Nairobi CBD for orders over KES 5,000
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Load product from sessionStorage
+    const selectedProduct = JSON.parse(sessionStorage.getItem('selectedProduct') || 'null');
+    const DELIVERY_FEE = 300;
+
+    if (selectedProduct) {
+        // Update order summary
+        document.getElementById('orderItem').innerHTML = `
+            <div class="d-flex">
+                <img src="${selectedProduct.image}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;" class="me-3">
+                <div>
+                    <h6 class="mb-1">${selectedProduct.name}</h6>
+                    <small class="text-muted">${selectedProduct.size} | ${selectedProduct.condition}</small>
+                </div>
+            </div>
+            <div class="mt-2 text-end h5 fw-bold text-primary">
+                KES ${selectedProduct.price.toLocaleString()}
+            </div>
+        `;
+
+        const subtotal = selectedProduct.price;
+        const total = subtotal + DELIVERY_FEE;
+
+        document.getElementById('subtotal').textContent = `KES ${subtotal.toLocaleString()}`;
+        document.getElementById('total').textContent = `KES ${total.toLocaleString()}`;
+        document.getElementById('totalAmount').textContent = total.toLocaleString();
+    } else {
+        document.getElementById('orderItem').innerHTML = '<p class="text-muted">No item selected. <a href="/">Go back to shop</a></p>';
+    }
+
+    const checkoutForm = document.getElementById('checkoutForm');
+    const csrfInput = checkoutForm.querySelector('input[name="csrfmiddlewaretoken"]');
+    const csrfToken = csrfInput ? csrfInput.value : '';
+
+    // Checkout API integration
+    checkoutForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        if (!selectedProduct) {
+            document.getElementById('paymentStatus').innerHTML = `
+                <div class="alert alert-danger">No product selected. Please go back and choose a product first.</div>
+            `;
+            return;
+        }
+
+        if (!checkoutForm.checkValidity()) {
+            checkoutForm.reportValidity();
+            return;
+        }
+        
+        const statusEl = document.getElementById('paymentStatus');
+        const submitBtn = e.target.querySelector('.mpesa-simulate');
+
+        const payload = {
+            customer_name: document.getElementById('fullName').value.trim(),
+            customer_email: document.getElementById('emailAddress').value.trim(),
+            phone_number: document.getElementById('phoneNumber').value.trim(),
+            delivery_location: document.getElementById('location').value.trim(),
+            notes: document.getElementById('notes').value.trim(),
+            product_id: selectedProduct.id,
+            product_name: selectedProduct.name,
+            product_price: selectedProduct.price,
+            delivery_fee: DELIVERY_FEE
+        };
+        
+        statusEl.innerHTML = `
+            <div class="alert alert-info">
+                <i class="fas fa-spinner fa-spin me-2"></i>
+                Sending M-Pesa STK Push to your phone...
+            </div>
+        `;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-3"></i>Processing...';
+
+        try {
+            const response = await fetch('/api/orders/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || 'Could not process checkout.');
+            }
+
+            const emailNote = data.email && data.email.customer_sent
+                ? 'A confirmation email has been sent to you.'
+                : 'Order saved. Email confirmation is pending SMTP configuration.';
+
+            statusEl.innerHTML = `
+                <div class="alert alert-success border-0 shadow">
+                    <h5 class="mb-2">🎉 Order Submitted!</h5>
+                    <p><strong>Order #${data.order.id}</strong> confirmed for <strong>KES ${data.order.total_amount.toLocaleString()}</strong>.</p>
+                    <p>${emailNote}</p>
+                    <a href="/" class="btn btn-success w-100">Continue Shopping</a>
+                </div>
+            `;
+            checkoutForm.reset();
+            sessionStorage.removeItem('selectedProduct');
+        } catch (error) {
+            statusEl.innerHTML = `
+                <div class="alert alert-danger">${error.message}</div>
+            `;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-lock me-3"></i>Pay with M-Pesa (KES <span id="totalAmount">0</span>)';
+            document.getElementById('totalAmount').textContent = (selectedProduct.price + DELIVERY_FEE).toLocaleString();
+        }
+    });
+</script>
+</body>
+</html>

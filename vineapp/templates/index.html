@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> VINE THRIFT COLLECTION | Curated Thrift Shoes</title>
+    {% load static%}
+
+
+    <link rel="icon" type="image/png" href="{% static 'assets/image.png' %}">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #ff7a1a;
+            --primary-dark: #e86200;
+            --ink: #17131f;
+            --bg-light: #f8f9fa;
+            --card-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            --border-radius: 16px;
+        }
+        html { scroll-padding-top: 120px; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at 10% -15%, rgba(255,122,26,0.16), transparent 42%),
+                radial-gradient(circle at 88% 0%, rgba(23,19,31,0.08), transparent 36%),
+                #fff;
+        }
+        .navbar-brand img { height: 36px; }
+        .nav-modern {
+            background: rgba(255,255,255,0.72) !important;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(23,19,31,0.08);
+            box-shadow: 0 10px 34px rgba(0,0,0,0.06) !important;
+            transition: all 0.28s ease;
+        }
+        .nav-modern .container {
+            min-height: 84px;
+            transition: min-height 0.28s ease;
+        }
+        .nav-modern.is-scrolled {
+            background: rgba(255,255,255,0.94) !important;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.09) !important;
+        }
+        .nav-modern.is-scrolled .container {
+            min-height: 70px;
+        }
+        .nav-tab-shell {
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(23,19,31,0.08);
+            border-radius: 999px;
+            padding: 6px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.75), 0 8px 24px rgba(23,19,31,0.08);
+        }
+        .nav-tab-list {
+            gap: 6px;
+        }
+        .nav-tab-list .nav-link {
+            border-radius: 999px;
+            color: #5a5566;
+            font-weight: 600;
+            padding: 10px 16px;
+            transition: all 0.25s ease;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid transparent;
+        }
+        .nav-tab-list .nav-link::after {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0);
+            transition: all 0.25s ease;
+        }
+        .nav-tab-list .nav-link i {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        .nav-tab-list .nav-link:hover {
+            color: var(--ink);
+            background: rgba(255,122,26,0.12);
+            transform: translateY(-1px);
+            border-color: rgba(255,122,26,0.18);
+        }
+        .nav-tab-list .nav-link.active {
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            box-shadow: 0 10px 24px rgba(232,98,0,0.35);
+        }
+        .nav-tab-list .nav-link.active::after {
+            background: rgba(255,255,255,0.95);
+        }
+        .nav-action-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.25s ease;
+        }
+        .nav-action-btn:hover { transform: translateY(-2px); }
+        .navbar-toggler {
+            border: 1px solid rgba(23,19,31,0.16);
+            border-radius: 12px;
+            padding: 6px 10px;
+        }
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 0.2rem rgba(255,122,26,0.28);
+        }
+        .hero-section { 
+            background: linear-gradient(135deg, #ff7a1a20 0%, #ffffff 100%);
+            padding: 60px 0;
+        }
+        .product-card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+        }
+        .product-image {
+            height: 220px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover .product-image { transform: scale(1.05); }
+        .badge-condition {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+        }
+        .btn-whatsapp {
+            background: #25D366;
+            border-color: #25D366;
+            color: white;
+        }
+        .btn-whatsapp:hover { background: #20ba5a; }
+        .wa-floating {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 20px;
+            right: 20px;
+            background: #25D366;
+            color: white;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 0 8px 32px rgba(37,211,102,0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .wa-floating:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(37,211,102,0.5);
+        }
+        .modal-xl .modal-dialog { max-width: 900px; }
+        .trust-badge {
+            background: rgba(255,122,26,0.1);
+            color: var(--primary);
+            border: 1px solid rgba(255,122,26,0.2);
+        }
+        .dark-mode-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+        }
+        .filters-row { 
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--card-shadow);
+        }
+        .feedback-section {
+            background: linear-gradient(135deg, rgba(255,122,26,0.09) 0%, rgba(255,255,255,0.96) 56%);
+        }
+        .feedback-card {
+            background: #fff;
+            border: 1px solid rgba(23,19,31,0.08);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+        }
+        .feedback-form-wrap {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+        .feedback-card {
+            padding: 24px;
+        }
+        .feedback-form-header {
+            border-bottom: 1px solid rgba(23,19,31,0.08);
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+        }
+        .feedback-form-header h4 {
+            margin: 0 0 6px;
+            font-weight: 700;
+            color: #2f293c;
+        }
+        .feedback-form-header p {
+            margin: 0;
+            color: #6a6478;
+        }
+        .feedback-card .form-label {
+            font-weight: 600;
+            color: #342f40;
+        }
+        .feedback-card .form-control,
+        .feedback-card .form-select {
+            border-radius: 12px;
+            border-color: rgba(23,19,31,0.14);
+        }
+        .feedback-card .form-control:focus,
+        .feedback-card .form-select:focus {
+            border-color: rgba(255,122,26,0.55);
+            box-shadow: 0 0 0 0.2rem rgba(255,122,26,0.2);
+        }
+        .feedback-inline-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .feedback-inline-actions #issueWhatsappLink {
+            width: auto;
+            margin-top: 0 !important;
+        }
+        .admin-feedback-panel {
+            margin-top: 0;
+            background: #fff;
+            border: 1px solid rgba(23,19,31,0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: opacity 0.3s, pointer-events 0.3s;
+        }
+        .admin-feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(23,19,31,0.08);
+            background: linear-gradient(135deg, rgba(255,122,26,0.14), rgba(255,255,255,0.95));
+        }
+        .admin-feedback-title {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #2f293c;
+        }
+        .admin-feedback-list {
+            max-height: 320px;
+            overflow: auto;
+            padding: 12px;
+            display: grid;
+            gap: 10px;
+        }
+        .admin-feedback-item {
+            border: 1px solid rgba(23,19,31,0.1);
+            border-radius: 12px;
+            padding: 10px 12px;
+            background: #fff;
+        }
+        .admin-feedback-item-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+            font-size: 0.86rem;
+            color: #5f5970;
+        }
+        .admin-feedback-item p {
+            margin: 0;
+            color: #352f43;
+            font-size: 0.92rem;
+        }
+        .admin-feedback-empty {
+            margin: 0;
+            color: #6c6678;
+            font-size: 0.92rem;
+            padding: 8px;
+            text-align: center;
+        }
+        .admin-lock-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            padding: 5px 12px;
+        }
+        .admin-panel-locked {
+            position: relative;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .pin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .pin-modal.show {
+            display: flex;
+        }
+        .pin-modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            min-width: 300px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        .pin-modal-content h4 {
+            margin-bottom: 20px;
+            color: var(--ink);
+        }
+        .pin-input {
+            font-size: 24px;
+            letter-spacing: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-weight: bold;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .pin-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.1);
+        }
+        .pin-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .pin-btn {
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 1px solid var(--border);
+            background: #f8f8f8;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .pin-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .pin-btn.delete {
+            background: #ffe0e0;
+        }
+        .pin-btn.delete:hover {
+            background: #ff6b6b;
+        }
+        .pin-verify-btn {
+            width: 100%;
+            padding: 12px;
+            font-weight: bold;
+        }
+        .pin-error {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .pin-error.show {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .hero-section { padding: 40px 0; }
+            .product-image { height: 180px; }
+        }
+        @media (max-width: 991.98px) {
+            .nav-tab-shell {
+                margin-top: 12px;
+                border-radius: 18px;
+            }
+            .nav-tab-list {
+                width: 100%;
+            }
+            .nav-tab-list .nav-link {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light sticky-top shadow-sm nav-modern">
+    <div class="container">
+        <a class="navbar-brand" href="#home">
+            <img src="{% static 'assets/image.png' %}" alt=" VINE THRIFT KICKS COLLECTION MARKETPLACE">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="nav-tab-shell ms-lg-auto">
+                <ul class="navbar-nav nav-tab-list align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link active" href="#home"><i class="fas fa-house"></i>Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#shop"><i class="fas fa-bag-shopping"></i>Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#new-arrivals"><i class="fas fa-star"></i>New Arrivals</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#testimonials"><i class="fas fa-comment-dots"></i>Reviews</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#feedback"><i class="fas fa-clipboard-check"></i>Feedback</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}"><i class="fas fa-envelope"></i>Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'checkout' %}"><i class="fas fa-shopping-cart"></i>Checkout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#admin"><i class="fas fa-user-shield"></i>Admin</a></li>
+                </ul>
+            </div>
+            <div class="d-flex gap-2 ms-lg-3 mt-3 mt-lg-0">
+                <button class="btn btn-outline-secondary btn-sm dark-mode-toggle nav-action-btn" title="Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="btn btn-outline-danger btn-sm nav-action-btn" title="Wishlist">
+                    <i class="fas fa-heart"></i>
+                </button>
+                <a href="https://wa.me/254707582534" class="btn btn-success btn-sm nav-action-btn" title="Chat on WhatsApp" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <span class="badge bg-warning mb-3">🕺 VINE THRIFT COLLECTION MARKETPLACE  </span>
+                <p>Home Of Sneakers</p>
+                <h1 class="display-4 fw-bold mb-4">Fresh thrift kicks in the Marketplace </h1>
+                <p class="lead mb-4">Verified pre-loved sneakers & casual shoes. M-Pesa friendly. Free delivery all over the Country</p>
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="#shop" class="btn btn-primary btn-lg px-5 py-3">
+                        <i class="fas fa-shopping-bag me-2"></i>Shop Now
+                    </a>
+                    <a href="#new-arrivals" class="btn btn-outline-primary btn-lg px-5 py-3">
+                        View Collection
+                    </a>
+                </div>
+                <div class="d-flex flex-wrap gap-3">
+                    <div class="trust-badge px-3 py-2 rounded-pill">
+                        <i class="fas fa-check-circle me-1"></i>Verified Quality
+                    </div>
+                    <div class="trust-badge px-3 py-2 rounded-pill">
+                        <i class="fas fa-truck me-1"></i>Pay on Delivery 
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="{% static 'assets/image.png' %}" 
+                     alt="Thrift sneakers lifestyle" class="img-fluid rounded-4 shadow-lg" style="max-height: 500px; object-fit: cover;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Shoes -->
+<section id="featured" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">🔥 Featured Drops</h2>
+            <p class="lead text-muted">Handpicked thrift kicks with the best value right now</p>
+        </div>
+        <div class="row g-4" id="featuredProducts">
+            <!-- Products loaded by JS -->
+        </div>
+    </div>
+</section>
+
+<!-- New Arrivals -->
+<section id="new-arrivals" class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">✨ New Arrivals</h2>
+            <p class="lead text-muted">Recently added pairs. Limited stock – once gone, they're gone!</p>
+        </div>
+        <div class="row g-4" id="newArrivals">
+            <!-- Products loaded by JS -->
+        </div>
+    </div>
+</section>
+
+<!-- Shop Section -->
+<section id="shop" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">🛍️ Shop All Shoes</h2>
+            <p class="lead text-muted">Filter by size, price, or condition to find your perfect pair</p>
+        </div>
+        
+        <!-- Filters -->
+        <div class="filters-row">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <select class="form-select" id="filterSize">
+                        <option value="">All Sizes</option>
+                        <option value="UK 3">UK 3</option>
+                        <option value="UK 4">UK 4</option>
+                        <option value="UK 5">UK 5</option>
+                        <option value="UK 6">UK 6</option>
+                        <option value="UK 7">UK 7</option>
+                        <option value="UK 8">UK 8</option>
+                        <option value="UK 9">UK 9</option>
+                        <option value="UK 10">UK 10</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filterCondition">
+                        <option value="">All Conditions</option>
+                        <option value="Like New">Like New</option>
+                        <option value="Excellent">Excellent</option>
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="sortBy">
+                        <option value="newest">Sort: Newest</option>
+                        <option value="low-high">Price: Low → High</option>
+                        <option value="high-low">Price: High → Low</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4" id="shopProducts">
+            <!-- Products loaded by JS -->
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section id="testimonials" class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">💬 What Potential Shoppers Say</h2>
+            <p class="lead text-muted">Real reviews from real customers</p>
+        </div>
+        <div class="row g-4 justify-content-center" id="testimonialsList">
+            <!-- Testimonials loaded by JS -->
+        </div>
+    </div>
+</section>
+
+<!-- Feedback Section -->
+<section id="feedback" class="py-5 feedback-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Share Feedback Or Report An Issue</h2>
+            <p class="lead text-muted">Tell us what you love about your pair or report a problem so we can fix it quickly.</p>
+        </div>
+        <div class="feedback-form-wrap">
+            <div class="feedback-card">
+                <div class="feedback-form-header">
+                    <h4>Customer Feedback Form</h4>
+                    <p>Complete the fields below and submit your feedback or issue report.</p>
+                </div>
+                <form method="post" id="customerFeedbackForm">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="feedbackName" class="form-label">Full Name</label>
+                            <input type="text" name="fullname" class="form-control" id="feedbackName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="feedbackEmail" class="form-label">Email Address</label>
+                            <input type="email" name="email" class="form-control" id="feedbackEmail" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="feedbackPhone" class="form-label">Phone Number</label>
+                            <input type="tel" name="phonenumber" class="form-control" id="feedbackPhone" placeholder="07XXXXXXXX" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="feedbackType" class="form-label">Submission Type</label>
+                            <select class="form-select" id="feedbackType" required>
+                                <option value="">Choose type</option>
+                                <option value="feedback">Product Feedback</option>
+                                <option value="issue">Report An Issue</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6" id="ratingWrap">
+                            <label for="feedbackRating" class="form-label">Rating</label>
+                            <select class="form-select" id="feedbackRating">
+                                <option value="">Select rating</option>
+                                <option value="5">5 - Excellent</option>
+                                <option value="4">4 - Very Good</option>
+                                <option value="3">3 - Good</option>
+                                <option value="2">2 - Needs Improvement</option>
+                                <option value="1">1 - Poor</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="feedbackProduct" class="form-label">Product Name (optional)</label>
+                            <input type="text" name="product_name" class="form-control" id="feedbackProduct" placeholder="Example: Nike Air Max 90">
+                        </div>
+                        <div class="col-12">
+                            <label for="feedbackMessage" class="form-label">Your Message</label>
+                            <textarea class="form-control" id="feedbackMessage" rows="5" placeholder="Share your experience or describe the issue" required></textarea>
+                        </div>
+                        <div class="col-12 feedback-inline-actions">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-paper-plane me-2"></i>Submit
+                            </button>
+                            <a id="issueWhatsappLink" class="btn btn-whatsapp d-none" target="_blank" rel="noopener noreferrer">
+                                <i class="fab fa-whatsapp me-2"></i>Send Issue On WhatsApp
+                            </a>
+                        </div>
+                        <div class="col-12">
+                            <div id="feedbackStatus" class="mt-2"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Admin Dashboard -->
+<section id="admin" class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="mb-4"><i class="fas fa-lock me-3"></i>Admin Dashboard</h2>
+                <div class="mb-4">
+                    <button type="button" class="btn btn-warning" id="unlockAdminBtn"><i class="fas fa-unlock me-2"></i>🔐 Unlock Admin Panel</button>
+                </div>
+                <div class="admin-feedback-panel admin-panel-locked" id="adminFeedbackPanel">
+                    <button type="button" class="btn btn-secondary btn-sm admin-lock-btn" id="lockAdminBtn"><i class="fas fa-lock me-1"></i>Lock</button>
+                    <div class="admin-feedback-header">
+                        <h5 class="admin-feedback-title"><i class="fas fa-user-shield me-2"></i>Admin View: Recent Feedback & Reports</h5>
+                        <div class="d-flex gap-2">
+                            <button id="refreshFeedbackBtn" type="button" class="btn btn-outline-secondary btn-sm">Refresh</button>
+                            <button id="clearFeedbackBtn" type="button" class="btn btn-outline-danger btn-sm">Clear All</button>
+                        </div>
+                    </div>
+                    <div id="adminFeedbackList" class="admin-feedback-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="pin-modal" id="pinModal">
+    <div class="pin-modal-content">
+        <h4><i class="fas fa-lock me-2"></i>Admin Access</h4>
+        <div class="pin-error" id="pinError">Invalid PIN. Try again.</div>
+        <input type="text" id="pinInput" class="pin-input" placeholder="Enter PIN" maxlength="6" inputmode="numeric">
+        <div class="pin-buttons">
+            <button type="button" class="pin-btn" data-number="1">1</button>
+            <button type="button" class="pin-btn" data-number="2">2</button>
+            <button type="button" class="pin-btn" data-number="3">3</button>
+            <button type="button" class="pin-btn" data-number="4">4</button>
+            <button type="button" class="pin-btn" data-number="5">5</button>
+            <button type="button" class="pin-btn" data-number="6">6</button>
+            <button type="button" class="pin-btn" data-number="7">7</button>
+            <button type="button" class="pin-btn" data-number="8">8</button>
+            <button type="button" class="pin-btn" data-number="9">9</button>
+            <button type="button" class="pin-btn" data-number="0">0</button>
+            <button type="button" class="pin-btn delete" id="pinDelete"><i class="fas fa-backspace"></i></button>
+            <button type="button" class="pin-btn" id="pinClear" style="grid-column: span 1;"><i class="fas fa-times"></i></button>
+        </div>
+        <button type="button" class="btn btn-primary pin-verify-btn" id="pinVerifyBtn">Verify PIN</button>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <h5 class="mb-3">🕺VINE THRIFT COLLECTION</h5>
+                <p>Curated thrift shoes with honest condition ratings and easy M-Pesa payments. Serving Nairobi since 2026.</p>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h6 class="mb-3">Quick Links</h6>
+                <ul class="list-unstyled">
+                    <li><a href="#shop" class="text-white-50">Shop</a></li>
+                    <li><a href="#new-arrivals" class="text-white-50">New Arrivals</a></li>
+                    <li><a href="#testimonials" class="text-white-50">Reviews</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <h6 class="mb-3">Follow Us</h6>
+                <div class="d-flex gap-3">
+                    <a href="https://www.tiktok.com" class="btn btn-outline-light btn-sm rounded-circle" title="TikTok" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://www.instagram.com" class="btn btn-outline-light btn-sm rounded-circle" title="Instagram" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://wa.me/254707582534" class="btn btn-success btn-sm rounded-circle" title="WhatsApp" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div class="text-center">
+            <p class="mb-0 text-white-50">© 2026 Thrift Kicks Collection. All rights reserved. Made for Kenyan shoppers.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Product Modal -->
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content border-0 rounded-4 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold fs-3" id="modalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <div class="col-md-6">
+                        <div id="productImageCarousel" class="carousel slide h-100" data-bs-ride="false">
+                            <div class="carousel-inner h-100" id="carouselImages">
+                                <!-- Images loaded by JS -->
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#productImageCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#productImageCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6 p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <span id="modalPrice" class="h3 fw-bold text-primary mb-0"></span>
+                                <span id="modalSize" class="badge bg-secondary ms-2"></span>
+                                <span id="modalCondition" class="badge bg-success ms-2"></span>
+                            </div>
+                            <span id="modalTag" class="badge bg-warning fs-6"></span>
+                        </div>
+                        <p class="lead mb-4" id="modalDescription"></p>
+                        
+                        <div class="d-flex flex-wrap gap-2 mb-4">
+                            <span class="badge trust-badge px-3 py-2">
+                                <i class="fas fa-check-circle me-1"></i>Verified Quality
+                            </span>
+                            <span class="badge trust-badge px-3 py-2">
+                                <i class="fas fa-truck me-1"></i>Pay on Delivery 
+                            </span>
+                        </div>
+                        
+                        <div class="d-grid gap-3">
+                            <a id="whatsappOrderBtn" class="btn btn-whatsapp btn-lg" target="_blank">
+                                <i class="fab fa-whatsapp me-2"></i>Order via WhatsApp
+                            </a>
+                            <a href="{% url 'checkout' %}" id="buyNowBtn" class="btn btn-primary btn-lg">
+                                <i class="fas fa-credit-card me-2"></i>Buy Now
+                            </a>
+                        </div>
+                        <small class="text-muted mt-3 d-block">
+                            📱 Confirm size, location & delivery details via WhatsApp or checkout
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/254707582534?text=Hi%20Thrift%20Kicks%20Nairobi%20🚀%0AI%27m%20ready%20to%20shop%20thrift%20shoes!%0AWhat%20do%20you%20have%20in%20stock?" 
+   class="wa-floating" target="_blank" rel="noopener">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const WHATSAPP_NUMBER = '254707582534';
+
+    let PRODUCTS = [];
+
+    const TESTIMONIALS = [
+        {
+            name: "Achieng - South B",
+            rating: 5,
+            text: "Ordered via WhatsApp, got delivery in under 24 hours. Shoes were exactly as shown! 🔥"
+        },
+        {
+            name: "Juma - Thika Road",
+            rating: 5,
+            text: "Solid thrift heat at fair prices. My Yeezys came clean and legit. Will be back! 👟"
+        },
+        {
+            name: "Wanjiku - Westlands",
+            rating: 4,
+            text: "Loved the Converse pair. Condition matched description perfectly. Fast service."
+        }
+    ];
+
+    // DOM Elements
+    const featuredContainer = document.getElementById('featuredProducts');
+    const newArrivalsContainer = document.getElementById('newArrivals');
+    const shopContainer = document.getElementById('shopProducts');
+    const testimonialsContainer = document.getElementById('testimonialsList');
+    const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+
+    async function fetchProducts() {
+        const response = await fetch('/api/products/');
+        if (!response.ok) {
+            throw new Error('Could not load products from server.');
+        }
+        const payload = await response.json();
+        return payload.products || [];
+    }
+
+    // Render Product Card
+    function renderProduct(product, container) {
+        const col = document.createElement('div');
+        col.className = 'col-md-6 col-lg-3';
+        col.innerHTML = `
+            <div class="card product-card h-100">
+                <div class="position-relative overflow-hidden">
+                    <img src="${product.image}" class="card-img-top product-image" alt="${product.name}">
+                    <span class="position-absolute top-0 start-0 badge badge-condition bg-warning mt-2 ms-2">${product.tag}</span>
+                    <button class="position-absolute top-0 end-0 p-2 m-2 bg-white rounded-circle shadow-sm border-0" 
+                            style="width: 40px; height: 40px;">
+                        <i class="fas fa-heart text-danger"></i>
+                    </button>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title fw-bold">${product.name}</h6>
+                    <div class="d-flex justify-content-between text-muted small mb-2">
+                        <span>${product.size}</span>
+                        <span>${product.condition}</span>
+                    </div>
+                    <div class="h5 fw-bold text-primary mb-3">${product.price.toLocaleString()} KES</div>
+                    <button class="btn btn-primary w-100 mt-auto" onclick="openProductModal(${product.id})">
+                        Quick View
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(col);
+    }
+
+    // Render all sections
+    function initProducts() {
+        if (!PRODUCTS.length) {
+            const emptyCard = '<div class="col-12"><div class="alert alert-secondary mb-0">No products in your collection yet. Add products in Django admin.</div></div>';
+            featuredContainer.innerHTML = emptyCard;
+            newArrivalsContainer.innerHTML = emptyCard;
+            shopContainer.innerHTML = emptyCard;
+            return;
+        }
+
+        // Featured (first 3)
+        featuredContainer.innerHTML = '';
+        const featured = PRODUCTS.filter(product => product.is_featured).slice(0, 4);
+        const featuredList = featured.length ? featured : PRODUCTS.slice(0, 4);
+        featuredList.forEach(product => renderProduct(product, featuredContainer));
+
+        // New Arrivals (all reversed)
+        newArrivalsContainer.innerHTML = '';
+        PRODUCTS.slice().reverse().forEach(product => renderProduct(product, newArrivalsContainer));
+
+        // Shop (all)
+        shopContainer.innerHTML = '';
+        PRODUCTS.forEach(product => renderProduct(product, shopContainer));
+    }
+
+    // Render testimonials
+    function renderTestimonials() {
+        testimonialsContainer.innerHTML = '';
+        TESTIMONIALS.forEach(testimonial => {
+            const col = document.createElement('div');
+            col.className = 'col-lg-4 col-md-6';
+            col.innerHTML = `
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body text-center p-4">
+                        <div class="mb-3">
+                            ${'★'.repeat(testimonial.rating)}${'☆'.repeat(5 - testimonial.rating)}
+                        </div>
+                        <p class="lead">${testimonial.text}</p>
+                        <h6 class="fw-bold">${testimonial.name}</h6>
+                    </div>
+                </div>
+            `;
+            testimonialsContainer.appendChild(col);
+        });
+    }
+
+    // Filters
+    function applyFilters() {
+        const sizeFilter = document.getElementById('filterSize').value;
+        const conditionFilter = document.getElementById('filterCondition').value;
+        const sortFilter = document.getElementById('sortBy').value;
+
+        let filtered = [...PRODUCTS];
+
+        if (sizeFilter) filtered = filtered.filter(p => p.size === sizeFilter);
+        if (conditionFilter) filtered = filtered.filter(p => p.condition === conditionFilter);
+
+        if (sortFilter === 'low-high') {
+            filtered.sort((a, b) => a.price - b.price);
+        } else if (sortFilter === 'high-low') {
+            filtered.sort((a, b) => b.price - a.price);
+        }
+
+        shopContainer.innerHTML = '';
+        filtered.forEach(product => renderProduct(product, shopContainer));
+    }
+
+    // Product Modal
+    window.openProductModal = function(productId) {
+        const product = PRODUCTS.find(p => p.id === productId);
+        if (!product) return;
+
+        // Update modal content
+        document.getElementById('modalTitle').textContent = product.name;
+        document.getElementById('modalPrice').textContent = product.price.toLocaleString() + ' KES';
+        document.getElementById('modalSize').textContent = product.size;
+        document.getElementById('modalCondition').textContent = product.condition;
+        document.getElementById('modalDescription').textContent = product.description;
+        document.getElementById('modalTag').textContent = product.tag;
+
+        // Carousel images
+        const carouselInner = document.getElementById('carouselImages');
+        carouselInner.innerHTML = '';
+        product.images.forEach((img, index) => {
+            const carouselItem = document.createElement('div');
+            carouselItem.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+            carouselItem.innerHTML = `<img src="${img}" class="d-block w-100 h-100" style="height: 500px; object-fit: cover;" alt="${product.name}">`;
+            carouselInner.appendChild(carouselItem);
+        });
+
+        // WhatsApp link
+        const message = encodeURIComponent(`Hi Thrift Kicks Nairobi 🚀\n\nI'm interested in:\n${product.name}\n${product.size} | ${product.condition}\n${product.price.toLocaleString()} KES\n\nIs it still available?`);
+        document.getElementById('whatsappOrderBtn').href = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+
+        // Save for checkout
+        sessionStorage.setItem('selectedProduct', JSON.stringify(product));
+        
+        productModal.show();
+    };
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            PRODUCTS = await fetchProducts();
+        } catch (error) {
+            PRODUCTS = [];
+        }
+
+        initProducts();
+        renderTestimonials();
+
+        // Filter listeners
+        document.getElementById('filterSize').addEventListener('change', applyFilters);
+        document.getElementById('filterCondition').addEventListener('change', applyFilters);
+        document.getElementById('sortBy').addEventListener('change', applyFilters);
+
+        const navLinks = document.querySelectorAll('.nav-tab-list .nav-link[href^="#"]');
+        const sections = Array.from(navLinks).map(link => {
+            const target = document.querySelector(link.getAttribute('href'));
+            return { link, target };
+        }).filter(item => item.target);
+
+        function setActiveNavLink(activeLink) {
+            navLinks.forEach(link => {
+                const isActive = link === activeLink;
+                link.classList.toggle('active', isActive);
+                if (isActive) {
+                    link.setAttribute('aria-current', 'page');
+                } else {
+                    link.removeAttribute('aria-current');
+                }
+            });
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                setActiveNavLink(this);
+
+                const navCollapseEl = document.getElementById('navbarNav');
+                if (window.innerWidth < 992 && navCollapseEl.classList.contains('show')) {
+                    bootstrap.Collapse.getOrCreateInstance(navCollapseEl).hide();
+                }
+            });
+        });
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+
+                const activeItem = sections.find(item => item.target.id === entry.target.id);
+                if (!activeItem) return;
+
+                setActiveNavLink(activeItem.link);
+            });
+        }, {
+            root: null,
+            threshold: 0.45,
+            rootMargin: '-18% 0px -35% 0px'
+        });
+
+        sections.forEach(item => sectionObserver.observe(item.target));
+
+        const navBar = document.querySelector('.nav-modern');
+        function updateNavOnScroll() {
+            if (!navBar) return;
+            navBar.classList.toggle('is-scrolled', window.scrollY > 10);
+        }
+        updateNavOnScroll();
+        window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+
+        // Admin PIN Configuration
+        const ADMIN_PIN = '9468';
+        const adminFeedbackPanel = document.getElementById('adminFeedbackPanel');
+        const pinModal = document.getElementById('pinModal');
+        const pinInput = document.getElementById('pinInput');
+        const pinError = document.getElementById('pinError');
+        const unlockAdminBtn = document.getElementById('unlockAdminBtn');
+        const lockAdminBtn = document.getElementById('lockAdminBtn');
+        const pinVerifyBtn = document.getElementById('pinVerifyBtn');
+        const pinDeleteBtn = document.getElementById('pinDelete');
+        const pinClearBtn = document.getElementById('pinClear');
+        const pinNumBtns = document.querySelectorAll('.pin-btn[data-number]');
+
+        // Hide admin panel initially
+        if (adminFeedbackPanel) {
+            adminFeedbackPanel.classList.add('admin-panel-locked');
+            unlockAdminBtn.style.display = 'block';
+        }
+
+        const feedbackForm = document.getElementById('customerFeedbackForm');
+        const feedbackType = document.getElementById('feedbackType');
+        const ratingWrap = document.getElementById('ratingWrap');
+        const feedbackStatus = document.getElementById('feedbackStatus');
+        const issueWhatsappLink = document.getElementById('issueWhatsappLink');
+        const adminFeedbackList = document.getElementById('adminFeedbackList');
+        const refreshFeedbackBtn = document.getElementById('refreshFeedbackBtn');
+        const clearFeedbackBtn = document.getElementById('clearFeedbackBtn');
+        const csrfTokenInput = feedbackForm ? feedbackForm.querySelector('input[name="csrfmiddlewaretoken"]') : null;
+        const csrfToken = csrfTokenInput ? csrfTokenInput.value : '';
+
+        async function fetchFeedback() {
+            const response = await fetch('/api/feedback/');
+            if (!response.ok) {
+                throw new Error('Failed to load feedback records.');
+            }
+            const data = await response.json();
+            return data.records || [];
+        }
+
+        async function renderAdminFeedback() {
+            if (!adminFeedbackList) return;
+
+            let records = [];
+            try {
+                records = await fetchFeedback();
+            } catch (error) {
+                adminFeedbackList.innerHTML = '<p class="admin-feedback-empty">Could not load records from the server.</p>';
+                return;
+            }
+
+            if (!records.length) {
+                adminFeedbackList.innerHTML = '<p class="admin-feedback-empty">No feedback submissions yet.</p>';
+                return;
+            }
+
+            adminFeedbackList.innerHTML = records.slice(0, 12).map(item => {
+                const typeLabel = item.type === 'issue' ? 'Issue' : 'Feedback';
+                const ratingLabel = item.rating ? `${item.rating}/5` : 'N/A';
+
+                return `
+                    <article class="admin-feedback-item">
+                        <div class="admin-feedback-item-head">
+                            <strong>${item.name}</strong>
+                            <span>${typeLabel} | Rating: ${ratingLabel}</span>
+                        </div>
+                        <div class="admin-feedback-item-head">
+                            <span>${item.phone}</span>
+                            <span>Record #${item.id}</span>
+                        </div>
+                        <p><strong>Product:</strong> ${item.product || 'Not specified'}</p>
+                        <p>${item.message}</p>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        if (refreshFeedbackBtn) {
+            refreshFeedbackBtn.addEventListener('click', function () {
+                renderAdminFeedback();
+            });
+        }
+
+        if (clearFeedbackBtn) {
+            clearFeedbackBtn.addEventListener('click', async function () {
+                try {
+                    const response = await fetch('/api/feedback/clear/', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                            'Content-Type': 'application/json'
+                        },
+                        body: '{}'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to clear records.');
+                    }
+
+                    await renderAdminFeedback();
+                    if (feedbackStatus) {
+                        feedbackStatus.innerHTML = '<div class="alert alert-secondary mb-0">Admin records cleared.</div>';
+                    }
+                    if (issueWhatsappLink) {
+                        issueWhatsappLink.classList.add('d-none');
+                    }
+                } catch (error) {
+                    if (feedbackStatus) {
+                        feedbackStatus.innerHTML = '<div class="alert alert-danger mb-0">Could not clear records right now.</div>';
+                    }
+                }
+            });
+        }
+
+        if (feedbackType && ratingWrap) {
+            feedbackType.addEventListener('change', function () {
+                const isIssue = this.value === 'issue';
+                ratingWrap.classList.toggle('d-none', isIssue);
+            });
+        }
+
+        if (feedbackForm && feedbackStatus && issueWhatsappLink) {
+            feedbackForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                if (!feedbackForm.checkValidity()) {
+                    feedbackForm.reportValidity();
+                    return;
+                }
+
+                const payload = {
+                    name: document.getElementById('feedbackName').value.trim(),
+                    email: document.getElementById('feedbackEmail').value.trim(),
+                    phone: document.getElementById('feedbackPhone').value.trim(),
+                    type: document.getElementById('feedbackType').value,
+                    rating: document.getElementById('feedbackRating').value,
+                    product: document.getElementById('feedbackProduct').value.trim(),
+                    message: document.getElementById('feedbackMessage').value.trim()
+                };
+
+                try {
+                    const response = await fetch('/api/feedback/', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Submit failed.');
+                    }
+                } catch (error) {
+                    feedbackStatus.innerHTML = '<div class="alert alert-danger mb-0">Could not save your message. Please try again.</div>';
+                    return;
+                }
+
+                if (payload.type === 'issue') {
+                    const issueMessage = encodeURIComponent(
+                        `Issue Report from ${payload.name}\nEmail: ${payload.email}\nPhone: ${payload.phone}\nProduct: ${payload.product || 'Not specified'}\nMessage: ${payload.message}`
+                    );
+                    issueWhatsappLink.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${issueMessage}`;
+                    issueWhatsappLink.classList.remove('d-none');
+                    feedbackStatus.innerHTML = '<div class="alert alert-success mb-0"><strong>Issue Received!</strong> We\'ve sent you a confirmation email and our team is already investigating. Tap "Send Issue On WhatsApp" for faster support.</div>';
+                } else {
+                    issueWhatsappLink.classList.add('d-none');
+                    feedbackStatus.innerHTML = '<div class="alert alert-success mb-0"><strong>Thank You!</strong> We\'ve received your feedback and sent you a confirmation email. Your input helps us improve!</div>';
+                }
+
+                feedbackForm.reset();
+                ratingWrap.classList.remove('d-none');
+                await renderAdminFeedback();
+            });
+        }
+
+        renderAdminFeedback();
+
+        // Admin PIN Logic
+        if (unlockAdminBtn) {
+            unlockAdminBtn.addEventListener('click', function () {
+                pinModal.classList.add('show');
+                pinInput.focus();
+                pinError.classList.remove('show');
+            });
+        }
+
+        if (lockAdminBtn) {
+            lockAdminBtn.addEventListener('click', function () {
+                adminFeedbackPanel.classList.add('admin-panel-locked');
+                unlockAdminBtn.style.display = 'block';
+                pinInput.value = '';
+                pinError.classList.remove('show');
+            });
+        }
+
+        if (pinNumBtns) {
+            pinNumBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    if (pinInput.value.length < 6) {
+                        pinInput.value += this.dataset.number;
+                    }
+                });
+            });
+        }
+
+        if (pinDeleteBtn) {
+            pinDeleteBtn.addEventListener('click', function () {
+                pinInput.value = pinInput.value.slice(0, -1);
+                pinError.classList.remove('show');
+            });
+        }
+
+        if (pinClearBtn) {
+            pinClearBtn.addEventListener('click', function () {
+                pinModal.classList.remove('show');
+                pinInput.value = '';
+                pinError.classList.remove('show');
+            });
+        }
+
+        if (pinVerifyBtn) {
+            pinVerifyBtn.addEventListener('click', function () {
+                if (pinInput.value === ADMIN_PIN) {
+                    adminFeedbackPanel.classList.remove('admin-panel-locked');
+                    unlockAdminBtn.style.display = 'none';
+                    pinModal.classList.remove('show');
+                    pinInput.value = '';
+                    pinError.classList.remove('show');
+                } else {
+                    pinError.classList.add('show');
+                    pinInput.value = '';
+                    setTimeout(() => pinInput.focus(), 100);
+                }
+            });
+        }
+
+        if (pinInput) {
+            pinInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    pinVerifyBtn.click();
+                }
+            });
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetSelector = this.getAttribute('href');
+                const targetElement = document.querySelector(targetSelector);
+
+                if (!targetElement) return;
+
+                e.preventDefault();
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    });
+</script>
+</body>
+</html>
