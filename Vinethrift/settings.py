@@ -158,7 +158,7 @@ def env_list(name, default=""):
 
 
 # Environment-aware deployment settings
-DEBUG = env_bool("DEBUG", False)
+DEBUG = True
 ALLOWED_HOSTS = [
     "vinethrift.onrender.com",
 ]
