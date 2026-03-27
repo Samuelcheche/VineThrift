@@ -10,43 +10,9 @@ from django.views.decorators.http import require_http_methods
 
 from vineapp.models import Order, Product, customer
 # Create your views here.
-def index(request):
-    return render(request, 'index.html' )
-
-def checkout(request):
-    return render(request, 'checkout.html' )
-
-def contact(request):
-    return render(request, 'contact.html')
 
 
-def send_notification_email(subject, message, recipients):
-    if not recipients:
-        return False
-
-    try:
-        send_mail(
-            subject=subject,
-            message=message,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=recipients,
-            fail_silently=False,
-        )
-        return True
-    except Exception as e:
-        print(f"Email sending error: {str(e)}")
-        return False
-
-
-@require_http_methods(["GET"])
-def products_api(request):
-    try:
-        records = list(
-            Product.objects.prefetch_related("gallery_images").order_by("-created_at", "-id")
-        )
-    except (OperationalError, DatabaseError):
-        return JsonResponse({"products": []})
-
+def _serialize_products(request, records):
     data = []
     fallback_image = request.build_absolute_uri(static("assets/image.png"))
 
@@ -108,7 +74,54 @@ def products_api(request):
             }
         )
 
-    return JsonResponse({"products": data})
+    return data
+
+
+def index(request):
+    try:
+        records = list(
+            Product.objects.prefetch_related("gallery_images").order_by("-created_at", "-id")
+        )
+    except (OperationalError, DatabaseError):
+        records = []
+
+    return render(request, 'index.html', {"initial_products": _serialize_products(request, records)})
+
+def checkout(request):
+    return render(request, 'checkout.html' )
+
+def contact(request):
+    return render(request, 'contact.html')
+
+
+def send_notification_email(subject, message, recipients):
+    if not recipients:
+        return False
+
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=recipients,
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        print(f"Email sending error: {str(e)}")
+        return False
+
+
+@require_http_methods(["GET"])
+def products_api(request):
+    try:
+        records = list(
+            Product.objects.prefetch_related("gallery_images").order_by("-created_at", "-id")
+        )
+    except (OperationalError, DatabaseError):
+        return JsonResponse({"products": []})
+
+    return JsonResponse({"products": _serialize_products(request, records)})
 
 
 @require_http_methods(["GET", "POST"])

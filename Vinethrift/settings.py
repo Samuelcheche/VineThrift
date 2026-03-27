@@ -24,7 +24,6 @@ except ImportError:
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 def env_bool(name, default=False):
     value = os.getenv(name)
     if value is None:
@@ -42,6 +41,11 @@ def env_path(name, default_path):
     if raw_value:
         return Path(raw_value)
     return Path(default_path)
+
+
+# Environment-aware deployment setting
+# Local development defaults to DEBUG=True unless explicitly overridden.
+DEBUG = env_bool("DEBUG", os.getenv("RENDER") is None)
 
 
 # Quick-start development settings - unsuitable for production
@@ -148,7 +152,11 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": (
+            "whitenoise.storage.CompressedStaticFilesStorage"
+            if DEBUG
+            else "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        ),
     },
 }
 
@@ -170,7 +178,6 @@ Path(MEDIA_ROOT).mkdir(parents=True, exist_ok=True)
 
 
 # Environment-aware deployment settings
-DEBUG = env_bool("DEBUG", False)
 ALLOWED_HOSTS = [
     "vinethrift.onrender.com",
     "127.0.0.1",
