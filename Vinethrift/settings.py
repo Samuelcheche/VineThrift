@@ -150,7 +150,9 @@ def env_list(name, default=""):
 
 # Environment-aware deployment settings
 DEBUG = env_bool("DEBUG", True)
-ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "127.0.0.1,localhost,vinethrift.onrender.com")
+ALLOWED_HOSTS = [
+    "vinethrift.onrender.com",
+]
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "https://vinethrift.onrender.com")
 
 # Respect Render proxy headers so Django treats requests as HTTPS.
