@@ -1,9 +1,11 @@
 import json
 
 from django.conf import settings
+from django.db import DatabaseError, OperationalError
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.templatetags.static import static
 from django.views.decorators.http import require_http_methods
 
 from vineapp.models import Order, Product, customer
@@ -38,17 +40,25 @@ def send_notification_email(subject, message, recipients):
 
 @require_http_methods(["GET"])
 def products_api(request):
-    records = Product.objects.prefetch_related("gallery_images").order_by("-created_at", "-id")
+    try:
+        records = Product.objects.prefetch_related("gallery_images").order_by("-created_at", "-id")
+    except (OperationalError, DatabaseError):
+        return JsonResponse({"products": []})
+
     data = []
+    fallback_image = request.build_absolute_uri(static("assets/image.png"))
 
     for record in records:
         image_name = str(record.image or "").strip()
         if image_name.startswith("http://") or image_name.startswith("https://"):
             main_image = image_name
         elif image_name:
-            main_image = request.build_absolute_uri(record.image.url)
+            try:
+                main_image = request.build_absolute_uri(record.image.url)
+            except Exception:
+                main_image = fallback_image
         else:
-            main_image = ""
+            main_image = fallback_image
 
         raw_gallery = record.images if isinstance(record.images, list) else []
         gallery = []
@@ -62,9 +72,17 @@ def products_api(request):
             else:
                 gallery.append(request.build_absolute_uri(item))
 
-        for gallery_item in record.gallery_images.all():
+        try:
+            gallery_items = record.gallery_images.all()
+        except (OperationalError, DatabaseError):
+            gallery_items = []
+
+        for gallery_item in gallery_items:
             if gallery_item.image:
-                image_url = request.build_absolute_uri(gallery_item.image.url)
+                try:
+                    image_url = request.build_absolute_uri(gallery_item.image.url)
+                except Exception:
+                    continue
                 if image_url not in gallery:
                     gallery.append(image_url)
 
@@ -94,7 +112,11 @@ def products_api(request):
 @require_http_methods(["GET", "POST"])
 def feedback_api(request):
     if request.method == "GET":
-        records = customer.objects.order_by("-id")[:20]
+        try:
+            records = customer.objects.order_by("-id")[:20]
+        except (OperationalError, DatabaseError):
+            return JsonResponse({"records": []})
+
         data = [
             {
                 "id": record.id,
