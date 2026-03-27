@@ -25,6 +25,25 @@ except ImportError:
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+def env_bool(name, default=False):
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def env_list(name, default=""):
+    raw_value = os.getenv(name, default)
+    return [item.strip() for item in raw_value.split(",") if item.strip()]
+
+
+def env_path(name, default_path):
+    raw_value = os.getenv(name)
+    if raw_value:
+        return Path(raw_value)
+    return Path(default_path)
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -81,7 +100,7 @@ WSGI_APPLICATION = 'Vinethrift.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': env_path('SQLITE_PATH', BASE_DIR / 'db.sqlite3'),
     }
 }
 
@@ -142,25 +161,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Media files (User uploads)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = env_path('MEDIA_ROOT', BASE_DIR / 'media')
 
-
-def env_bool(name, default=False):
-    value = os.getenv(name)
-    if value is None:
-        return default
-    return value.strip().lower() in {"1", "true", "yes", "on"}
-
-
-def env_list(name, default=""):
-    raw_value = os.getenv(name, default)
-    return [item.strip() for item in raw_value.split(",") if item.strip()]
+# Ensure sqlite/media parent directories exist when custom deployment paths are used.
+Path(DATABASES['default']['NAME']).parent.mkdir(parents=True, exist_ok=True)
+Path(MEDIA_ROOT).mkdir(parents=True, exist_ok=True)
 
 
 # Environment-aware deployment settings
-DEBUG = True
+DEBUG = env_bool("DEBUG", False)
 ALLOWED_HOSTS = [
     "vinethrift.onrender.com",
+    "127.0.0.1",
+    "localhost",
 ]
 CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS", "https://vinethrift.onrender.com")
 
