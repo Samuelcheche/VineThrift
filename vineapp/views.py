@@ -41,7 +41,9 @@ def send_notification_email(subject, message, recipients):
 @require_http_methods(["GET"])
 def products_api(request):
     try:
-        records = Product.objects.prefetch_related("gallery_images").order_by("-created_at", "-id")
+        records = list(
+            Product.objects.prefetch_related("gallery_images").order_by("-created_at", "-id")
+        )
     except (OperationalError, DatabaseError):
         return JsonResponse({"products": []})
 
@@ -113,7 +115,7 @@ def products_api(request):
 def feedback_api(request):
     if request.method == "GET":
         try:
-            records = customer.objects.order_by("-id")[:20]
+            records = list(customer.objects.order_by("-id")[:20])
         except (OperationalError, DatabaseError):
             return JsonResponse({"records": []})
 

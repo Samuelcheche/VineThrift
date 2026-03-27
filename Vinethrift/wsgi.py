@@ -23,12 +23,20 @@ def _env_true(name, default=False):
 
 
 def _run_startup_migrations():
-	# Render sets the RENDER environment variable for deployed services.
-	auto_migrate = _env_true("AUTO_MIGRATE", bool(os.getenv("RENDER")))
+	# Auto-migrate in Render (or when explicitly enabled) to avoid missing auth/session tables.
+	render_env_detected = any(
+		os.getenv(name)
+		for name in ("RENDER", "RENDER_EXTERNAL_URL", "RENDER_EXTERNAL_HOSTNAME")
+	)
+	auto_migrate = _env_true("AUTO_MIGRATE", render_env_detected)
 	if not auto_migrate:
 		return
 
-	call_command("migrate", interactive=False, run_syncdb=True, verbosity=0)
+	try:
+		call_command("migrate", interactive=False, run_syncdb=True, verbosity=1)
+	except Exception as exc:
+		# Don't block boot forever; keep the app up so logs/health checks are visible.
+		print(f"Startup migration failed: {exc}")
 
 
 _run_startup_migrations()
